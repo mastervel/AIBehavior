@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://dw74mboq8p3md"]
 
-[ext_resource type="Script" uid="uid://dgjl7mimshhqp" path="res://enemy.gd" id="1_7k104"]
+[ext_resource type="Script" uid="uid://2ukgrqlj3orx" path="res://enemy.gd" id="1_7k104"]
 [ext_resource type="Shape3D" uid="uid://8mtgkqhgv7o1" path="res://vision_collision_shape.tres" id="2_4gyqm"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7k104"]
@@ -19,13 +19,11 @@ rings = 10
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_7k104"]
 height = 1.025
 
-[node name="Enemy" type="CharacterBody3D" node_paths=PackedStringArray("nav_agent", "vision_area", "enemy_body")]
+[node name="Enemy" type="CharacterBody3D" node_paths=PackedStringArray("nav_agent")]
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_7k104")
 nav_agent = NodePath("NavigationAgent3D")
-vision_area = NodePath("Vision")
-enemy_body = NodePath("Body")
 
 [node name="Body" type="MeshInstance3D" parent="."]
 material_override = SubResource("StandardMaterial3D_7k104")

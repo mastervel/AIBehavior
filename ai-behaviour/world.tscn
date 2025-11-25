@@ -1,8 +1,8 @@
 [gd_scene load_steps=9 format=3 uid="uid://bmknmuif4cru3"]
 
-[ext_resource type="ArrayMesh" path="res://array_mesh.tres" id="3_aqk2v"]
-[ext_resource type="PackedScene" path="res://player.tscn" id="3_tlwt5"]
-[ext_resource type="PackedScene" path="res://enemy.tscn" id="4_aqk2v"]
+[ext_resource type="ArrayMesh" uid="uid://dfxo855rlax34" path="res://array_mesh.tres" id="3_aqk2v"]
+[ext_resource type="PackedScene" uid="uid://ceqcwirpbnbio" path="res://player.tscn" id="3_tlwt5"]
+[ext_resource type="PackedScene" uid="uid://dw74mboq8p3md" path="res://enemy.tscn" id="4_aqk2v"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_tlwt5"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -37,9 +37,10 @@ environment = SubResource("Environment_036b0")
 
 [node name="Player" parent="." instance=ExtResource("3_tlwt5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.69941235, 0)
+collision_layer = 6
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.78396446, 0.62080586, 0, -0.62080586, 0.78396446, 0, 12.951216, 15.296211)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 15, 0)
 
 [node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.0812702, 0)
@@ -56,3 +57,5 @@ skeleton = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Floor/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_tlwt5")
+
+[editable path="Enemy"]
