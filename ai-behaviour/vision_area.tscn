@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://hyt58coj5ha7"]
+
+[ext_resource type="PackedScene" uid="uid://cnqkqlty4atft" path="res://vision_area.glb" id="1_t5ge5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7a7x2"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_color = Color(1, 0, 1, 0.25490198)
+
+[node name="VisionArea" instance=ExtResource("1_t5ge5")]
+
+[node name="Circle" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_7a7x2")
