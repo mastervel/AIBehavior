@@ -42,9 +42,10 @@ collision_layer = 6
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 15, 0)
 
-[node name="Enemy" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_aqk2v")]
+[node name="Enemy" parent="." node_paths=PackedStringArray("player", "enemy_body") instance=ExtResource("4_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.0812702, 0)
 player = NodePath("../Player")
+enemy_body = NodePath("Body")
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
 navigation_mesh = SubResource("NavigationMesh_tlwt5")
