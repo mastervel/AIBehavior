@@ -3,6 +3,7 @@ extends CharacterBody3D
 @export var nav_agent : NavigationAgent3D
 @export var player : CharacterBody3D
 @export var enemy_body : MeshInstance3D
+@export var aggro_timer : Timer
 
 var target_pos : Vector3
 var has_target : bool = false
@@ -13,7 +14,10 @@ var state_names := ["IDLE", "ROAM", "ALERT", "AGGRO"]
 var state : State = State.IDLE:
 	set = changeState
 
+@export var AGGRO_TIME: float = 1.0
+
 func _ready() -> void:
+	aggro_timer.wait_time = AGGRO_TIME
 	_body_color(Color.GRAY)
 	randomize()
 
@@ -52,14 +56,23 @@ func changeState(s: State) -> void:
 		[State.ALERT,State.ROAM]:
 			nav_agent.target_position = player.global_position
 			has_target = true
+			aggro_timer.stop()
+			print("Interrupted!")
 		[State.ROAM,State.ALERT]:
 			has_target = false
+		[State.ALERT,State.AGGRO]:
+			nav_agent.target_position = player.global_position
+			has_target = true
 	
 	match state:
 		State.ROAM:
 			_body_color(Color.GREEN)
 		State.ALERT:
 			_body_color(Color.YELLOW)
+			aggro_timer.start()
+			print("Timer started.")
+		State.AGGRO:
+			_body_color(Color.RED)
 #endregion
 
 #region State Process Functions
@@ -73,7 +86,8 @@ func _alert_process(delta: float) -> void:
 	_look_at_target(delta, player, true)
 
 func _aggro_process(_delta: float) -> void:
-	pass
+	if not has_target:
+		state = State.ALERT
 
 #endregion
 
@@ -137,5 +151,9 @@ func _on_body_exited(_body: Node3D) -> void:
 			state = State.ROAM
 		State.AGGRO:
 			pass
+
+func _on_aggro_timer_timeout() -> void:
+	print("Aggroed!")
+	state = State.AGGRO
 
 #endregion

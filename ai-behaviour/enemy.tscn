@@ -19,11 +19,13 @@ rings = 10
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_7k104"]
 height = 1.025
 
-[node name="Enemy" type="CharacterBody3D" node_paths=PackedStringArray("nav_agent")]
+[node name="Enemy" type="CharacterBody3D" node_paths=PackedStringArray("nav_agent", "enemy_body", "aggro_timer")]
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_7k104")
 nav_agent = NodePath("NavigationAgent3D")
+enemy_body = NodePath("Body")
+aggro_timer = NodePath("Aggro Timer")
 
 [node name="Body" type="MeshInstance3D" parent="."]
 material_override = SubResource("StandardMaterial3D_7k104")
@@ -50,5 +52,8 @@ transform = Transform3D(-2, 3.019916e-07, 0, -3.019916e-07, -2, 0, 0, 0, 2, 0, 0
 shape = ExtResource("2_4gyqm")
 debug_color = Color(0.98039216, 0, 0.3764706, 1)
 
+[node name="Aggro Timer" type="Timer" parent="."]
+
 [connection signal="body_entered" from="Vision" to="." method="_on_body_entered"]
 [connection signal="body_exited" from="Vision" to="." method="_on_body_exited"]
+[connection signal="timeout" from="Aggro Timer" to="." method="_on_aggro_timer_timeout"]
