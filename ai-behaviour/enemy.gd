@@ -53,6 +53,8 @@ func changeState(s: State) -> void:
 	match [prev_state, state]:
 		[State.ROAM,State.ROAM]:
 			nav_agent.target_position = _get_random_position()
+			if not nav_agent.is_target_reachable():
+				print("Target Position Not Reachable!")
 			has_target = true
 		[State.ALERT,State.ROAM]:
 			nav_agent.target_position = player.global_position
@@ -81,6 +83,8 @@ func changeState(s: State) -> void:
 func _roam_process(_delta: float) -> void:
 	if not has_target:
 		nav_agent.target_position = _get_random_position()
+		if not nav_agent.is_target_reachable():
+			print("Target Position Not Reachable!")
 		has_target = true
 
 func _alert_process(delta: float) -> void:
@@ -127,6 +131,10 @@ func _get_random_position(dist: float = 4.0, degrees: float = 20.0) -> Vector3:
 	var rand_angle := randf_range(-degrees,degrees)
 	var rotated_forward = forward.rotated(Vector3.UP,deg_to_rad(rand_angle))
 	return global_transform.origin + rotated_forward * dist
+
+func _avoid_boundary() -> void:
+	if not nav_agent.is_target_reachable():
+		var old_target := nav_agent.get_final_position()
 
 func _body_color(col: Color) -> void:
 	var mat := StandardMaterial3D.new()
