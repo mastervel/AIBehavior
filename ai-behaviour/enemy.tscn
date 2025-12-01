@@ -19,13 +19,14 @@ rings = 10
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_7k104"]
 height = 1.025
 
-[node name="Enemy" type="CharacterBody3D" node_paths=PackedStringArray("nav_agent", "enemy_body", "aggro_timer")]
+[node name="Enemy" type="CharacterBody3D" node_paths=PackedStringArray("nav_agent", "enemy_body", "aggro_timer", "vision_area")]
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_7k104")
 nav_agent = NodePath("NavigationAgent3D")
 enemy_body = NodePath("Body")
 aggro_timer = NodePath("Aggro Timer")
+vision_area = NodePath("Vision")
 
 [node name="Body" type="MeshInstance3D" parent="."]
 material_override = SubResource("StandardMaterial3D_7k104")

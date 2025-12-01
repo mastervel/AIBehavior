@@ -12,6 +12,7 @@ points = PackedVector3Array(-0.24633947, -0.44074982, -0.42789525, 0.06543268, 0
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_4flbx")
+SPEED = 10.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_4flbx")

@@ -4,6 +4,7 @@ extends CharacterBody3D
 @export var player : CharacterBody3D
 @export var enemy_body : MeshInstance3D
 @export var aggro_timer : Timer
+@export var vision_area : Area3D
 
 var target_pos : Vector3
 var has_target : bool = false
@@ -83,7 +84,9 @@ func _roam_process(_delta: float) -> void:
 		has_target = true
 
 func _alert_process(delta: float) -> void:
-	_look_at_target(delta, player, true)
+	_look_at_target(delta, player)
+	if not vision_area.overlaps_body(player):
+		state = State.ROAM
 
 func _aggro_process(_delta: float) -> void:
 	if not has_target:
@@ -102,22 +105,22 @@ func _move_to_target(delta: float) -> void:
 		has_target = false
 		velocity = Vector3.ZERO
 	
-	var ROTATION_SPEED := 4.0
-	var target_rotation := direction.signed_angle_to(Vector3.MODEL_FRONT, Vector3.DOWN)
-	if abs(target_rotation - rotation.y) > deg_to_rad(60):
-		ROTATION_SPEED = 20.0
-	rotation.y = move_toward(rotation.y, target_rotation, delta * ROTATION_SPEED)
+	_rotate_to_target(delta, direction)
 
-func _look_at_target(delta: float, target: Node3D, 
-		use_model_front: bool = false, look_at_speed: float = 5.0
-	) -> void:
-	var forward = (target.global_position - global_position).normalized()
-	var z = (forward if use_model_front else -forward)
-	var x = Vector3.UP.cross(z).normalized()
-	var y = z.cross(x)
-	global_transform.basis = lerp(
-		global_transform.basis, Basis(x,y,z), delta * look_at_speed
-		)
+func _rotate_to_target(delta: float, direction: Vector3) -> void:
+	var ROTATION_SPEED := 4.0
+	var target_rotation := atan2(direction.x, direction.z)
+	var angle_diff: float = abs(wrapf(target_rotation - rotation.y, -PI, PI))
+	if angle_diff > deg_to_rad(60):
+		ROTATION_SPEED = 20
+	rotation.y = lerp_angle(rotation.y, target_rotation, clamp(delta * ROTATION_SPEED, 0.0, 1.0))
+
+func _look_at_target(delta: float, target: Node3D) -> void:
+		var target_position := target.global_position
+		var to_target := target_position - global_position
+		if to_target.length_squared() < 0.00001:
+			return
+		_rotate_to_target(delta, to_target)
 
 func _get_random_position(dist: float = 4.0, degrees: float = 20.0) -> Vector3:
 	var forward = global_transform.basis.z.normalized()
