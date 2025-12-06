@@ -91,6 +91,7 @@ func _alert_process(delta: float) -> void:
 	_look_at_target(delta, player)
 	if not vision_area.overlaps_body(player):
 		state = State.ROAM
+		return
 
 func _aggro_process(_delta: float) -> void:
 	if not has_target:
@@ -132,16 +133,18 @@ func _get_random_position(dist: float = 4.0, degrees: float = 20.0) -> Vector3:
 	var rotated_forward = forward.rotated(Vector3.UP,deg_to_rad(rand_angle))
 	return global_transform.origin + rotated_forward * dist
 
-func _avoid_boundary() -> void:
-	if not nav_agent.is_target_reachable():
-		var old_target := nav_agent.get_final_position()
-
 func _body_color(col: Color) -> void:
 	var mat := StandardMaterial3D.new()
 	mat.albedo_color = col
 	enemy_body.material_override = mat
 
-func _on_body_entered(_body: Node3D) -> void:
+func _on_body_entered(body: Node3D) -> void:
+	vision_area.is_in_los(player)
+	if not body.is_in_group("Player"):
+		return
+	if not vision_area.is_in_los(body):
+		return
+	print(body.name, " is in LOS!")
 	match state:
 		State.IDLE:
 			pass

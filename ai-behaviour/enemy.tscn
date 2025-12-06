@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://dw74mboq8p3md"]
+[gd_scene load_steps=8 format=3 uid="uid://dw74mboq8p3md"]
 
 [ext_resource type="Script" uid="uid://2ukgrqlj3orx" path="res://enemy.gd" id="1_7k104"]
 [ext_resource type="Shape3D" uid="uid://8mtgkqhgv7o1" path="res://vision_collision_shape.tres" id="2_4gyqm"]
+[ext_resource type="Script" uid="uid://cqjhxieu83lt4" path="res://vision.gd" id="2_qi2p4"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7k104"]
 albedo_color = Color(0, 1, 0, 1)
@@ -26,7 +27,7 @@ script = ExtResource("1_7k104")
 nav_agent = NodePath("NavigationAgent3D")
 enemy_body = NodePath("Body")
 aggro_timer = NodePath("Aggro Timer")
-vision_area = NodePath("Vision")
+vision_area = NodePath("VisionArea")
 
 [node name="Body" type="MeshInstance3D" parent="."]
 material_override = SubResource("StandardMaterial3D_7k104")
@@ -43,18 +44,26 @@ debug_path_custom_color = Color(1, 0, 0, 1)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CylinderShape3D_7k104")
 
-[node name="Vision" type="Area3D" parent="."]
+[node name="VisionArea" type="Area3D" parent="." node_paths=PackedStringArray("vision_ray")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 collision_layer = 0
 collision_mask = 4
+script = ExtResource("2_qi2p4")
+vision_ray = NodePath("RayLOS")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Vision"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="VisionArea"]
 transform = Transform3D(-2, 3.019916e-07, 0, -3.019916e-07, -2, 0, 0, 0, 2, 0, 0, 0)
 shape = ExtResource("2_4gyqm")
 debug_color = Color(0.98039216, 0, 0.3764706, 1)
 
+[node name="RayLOS" type="RayCast3D" parent="VisionArea"]
+target_position = Vector3(0, 0, 0)
+collision_mask = 3
+debug_shape_custom_color = Color(0, 1, 0, 1)
+debug_shape_thickness = 5
+
 [node name="Aggro Timer" type="Timer" parent="."]
 
-[connection signal="body_entered" from="Vision" to="." method="_on_body_entered"]
-[connection signal="body_exited" from="Vision" to="." method="_on_body_exited"]
+[connection signal="body_entered" from="VisionArea" to="." method="_on_body_entered"]
+[connection signal="body_exited" from="VisionArea" to="." method="_on_body_exited"]
 [connection signal="timeout" from="Aggro Timer" to="." method="_on_aggro_timer_timeout"]
